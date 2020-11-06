@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class Sender {
 
     private static int windowSize = 4;
-    private static int prevSeqNum = 0;
+    private static int currentSeqNum;
     private static int nextSeqNum = 0;
     //private static int totalPackets = 0;
     private static long start = 0;
@@ -70,12 +70,14 @@ public class Sender {
         while (true) {
             start = System.nanoTime(); //start the timer
             int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-
-            while (nextSeqNum < prevSeqNum + windowSize) {  //should not exceed window size
+            
+            currentSeqNum = 0;
+            
+            while (currentSeqNum < windowSize - 1) {  //should not exceed window size
                 data = new byte[max];
-                startIndex = max * prevSeqNum;
-                endIndex = max * prevSeqNum + max;
-                data = Arrays.copyOfRange(totalBytes, startIndex, endIndex); //update bytes for the current packet
+                startIndex = max * currentSeqNum;
+                endIndex = startIndex + max;
+                data = Arrays.copyOfRange(totalBytes, startIndex, endIndex); //get bytes for the current packet from totalBytes
 
                 buf = ByteBuffer.wrap(data);
 
@@ -89,12 +91,15 @@ public class Sender {
                 //if random number generated is less than user input, then simulate packet loss
                 if (pseudoNum < userNum) {
                     ++packetLoss; //keep count of total packet losses
+                    
+                    
                 } else {
                     buf.rewind();
                     pkt = new DatagramPacket(data, max, ip, 8888);
                     ds.send(pkt);
                     //++prevSeqNum;
-                    ++nextSeqNum;
+                    ++currentSeqNum;
+                    nextSeqNum = currentSeqNum + 1;
                   }
                 
             }
@@ -106,7 +111,7 @@ public class Sender {
             //resend from the packet requiring ACK, up to the previous sequence number (nextSeqNum-1)
             for (int i = (nextSeqNum - 1) - windowSize; i < nextSeqNum - 1; ++i) { //i'm attempting to make i = packet trying to get ACK'ed
                 startIndex = max * i;
-                endIndex = max * i + max;
+                endIndex = startIndex + max;
                 data = Arrays.copyOfRange(totalBytes, startIndex, endIndex);
 
                 buf = ByteBuffer.wrap(data);
@@ -126,7 +131,7 @@ public class Sender {
         end = System.nanoTime(); //end the timer
 
         System.out.println("Elapsed time: " + (end - start));
-        System.out.println("Packets sent: " + prevSeqNum);
+        System.out.println("Packets sent: " + currentSeqNum);
         System.out.println("Lost packets: " + packetLoss);
     }
 
