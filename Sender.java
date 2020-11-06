@@ -45,8 +45,11 @@ public class Sender {
         byte[] totalBytes = Files.readAllBytes(Paths.get("test.txt")); //convert entire file to bytes
 
         //totalPackets = totalBytes.length / max; //total # of packets in file
+        
         //ArrayList<Packet> packetList = new ArrayList<>(); //new list of all packets
+        
         //DatagramPacket ack = new DatagramPacket(); //create new Datagram packet for ACK coming in -- need to fill in parameters
+        
         byte[] ackBytes = new byte[200]; //arbitrary number for ACK bytes
 
         //user inputs number 0-99
@@ -66,6 +69,7 @@ public class Sender {
 
         while (true) {
             start = System.nanoTime(); //start the timer
+            int randomNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
 
             while (nextSeqNum < prevSeqNum + windowSize) {  //should not exceed window size
                 data = new byte[max];
@@ -82,18 +86,18 @@ public class Sender {
                     break;
                 }
 
-                int randomNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-
                 //if random number generated is less than user input, then simulate packet loss
                 if (randomNum < userNum) {
                     ++packetLoss; //keep count of total packet losses
-                } else {
-                    buf.rewind();
-                    pkt = new DatagramPacket(data, max, ip, 8888);
-                    ds.send(pkt);
-                    ++prevSeqNum;
-                    nextSeqNum = prevSeqNum + 1;
+                    //keep track of this seq num that will have ACK problem   
                 }
+                
+                buf.rewind();
+                pkt = new DatagramPacket(data, max, ip, 8888);
+                ds.send(pkt);
+                ++prevSeqNum;
+                nextSeqNum = prevSeqNum + 1;
+                
             }
 
             //if ds.receive(ack)
@@ -123,9 +127,9 @@ public class Sender {
         fis.close();
         end = System.nanoTime(); //end the timer
 
-        System.out.println("Elapsed time for data file transmission: " + (end - start));
-        System.out.println("Data units sent: " + prevSeqNum);
-        System.out.println("Packets lost: " + packetLoss);
+        System.out.println("Elapsed time: " + (end - start));
+        System.out.println("Packets sent: " + prevSeqNum);
+        System.out.println("Lost packets: " + packetLoss);
     }
 
 }
