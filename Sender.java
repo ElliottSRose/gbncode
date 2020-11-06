@@ -89,14 +89,13 @@ public class Sender {
                 //if random number generated is less than user input, then simulate packet loss
                 if (randomNum < userNum) {
                     ++packetLoss; //keep count of total packet losses
-                    //keep track of this seq num that will have ACK problem   
-                }
-                
-                buf.rewind();
-                pkt = new DatagramPacket(data, max, ip, 8888);
-                ds.send(pkt);
-                ++prevSeqNum;
-                nextSeqNum = prevSeqNum + 1;
+                } else {
+                    buf.rewind();
+                    pkt = new DatagramPacket(data, max, ip, 8888);
+                    ds.send(pkt);
+                    ++prevSeqNum;
+                    nextSeqNum = prevSeqNum + 1;
+                  }
                 
             }
 
