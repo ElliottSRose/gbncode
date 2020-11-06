@@ -103,8 +103,8 @@ public class Sender {
             //need code for: if ACK is received within a specific timeframe, it is successful
             
             //else if it takes too long/ACK never comes through,
-            //resend from the packet requiring ACK, up to the previous sequence number
-            for (int i = nextSeqNum - windowSize; i < nextSeqNum; ++i) { //i'm attempting to make i = packet trying to get ACK'ed
+            //resend from the packet requiring ACK, up to the previous sequence number (nextSeqNum-1)
+            for (int i = (nextSeqNum - 1) - windowSize; i < nextSeqNum - 1; ++i) { //i'm attempting to make i = packet trying to get ACK'ed
                 startIndex = max * i;
                 endIndex = max * i + max;
                 data = Arrays.copyOfRange(totalBytes, startIndex, endIndex);
