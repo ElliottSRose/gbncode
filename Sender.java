@@ -18,7 +18,6 @@ import java.util.Scanner;
 public class Sender {
 
     private static int windowSize = 4;
-    //private static int maxPayload = 4096;
     private static int prevSeqNum = 0;
     private static int nextSeqNum = 0;
     private static int totalPackets = 0;
