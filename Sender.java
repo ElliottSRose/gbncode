@@ -123,9 +123,9 @@ public class Sender {
         fis.close();
         end = System.nanoTime(); //end the timer
 
-        System.out.println("Elapsed time: " + (end - start));
-        System.out.println("Packets sent: " + prevSeqNum);
-        System.out.println("Lost packets: " + packetLoss);
+        System.out.println("Elapsed time for data file transmission: " + (end - start));
+        System.out.println("Data units sent: " + prevSeqNum);
+        System.out.println("Packets lost: " + packetLoss);
     }
 
 }
