@@ -78,7 +78,9 @@ public class Sender {
                 }
 
                 int randomNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-                if (randomNum < userNum) { //if random number generated is less than user input, then simulate packet loss
+                
+                //if random number generated is less than user input, then simulate packet loss
+                if (randomNum < userNum) { 
                     ++packetLoss; //keeps count of total packet losses
                 } else {
                     buf.rewind();
