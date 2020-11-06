@@ -19,8 +19,9 @@ public class Sender {
 
     private static int windowSize = 4;
     private static int currentSeqNum;
-    private static int nextSeqNum = 0;
+    private static int nextSeqNum;
     //private static int totalPackets = 0;
+    private static int totalPacketsSent = 0;
     private static long start = 0;
     private static long end = 0;
     private static int max = 4096;
@@ -45,11 +46,8 @@ public class Sender {
         byte[] totalBytes = Files.readAllBytes(Paths.get("test.txt")); //convert entire file to bytes
 
         //totalPackets = totalBytes.length / max; //total # of packets in file
-        
         //ArrayList<Packet> packetList = new ArrayList<>(); //new list of all packets
-        
         //DatagramPacket ack = new DatagramPacket(); //create new Datagram packet for ACK coming in -- need to fill in parameters
-        
         byte[] ackBytes = new byte[200]; //arbitrary number for ACK bytes
 
         //user inputs number 0-99
@@ -70,9 +68,10 @@ public class Sender {
         while (true) {
             start = System.nanoTime(); //start the timer
             int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-            
+
             currentSeqNum = 0;
-            
+            nextSeqNum = 0;
+
             while (currentSeqNum < windowSize - 1) {  //should not exceed window size
                 data = new byte[max];
                 startIndex = max * currentSeqNum;
@@ -91,22 +90,21 @@ public class Sender {
                 //if random number generated is less than user input, then simulate packet loss
                 if (pseudoNum < userNum) {
                     ++packetLoss; //keep count of total packet losses
-                    
-                    
+
                 } else {
                     buf.rewind();
                     pkt = new DatagramPacket(data, max, ip, 8888);
                     ds.send(pkt);
-                    //++prevSeqNum;
+
                     ++currentSeqNum;
                     nextSeqNum = currentSeqNum + 1;
-                  }
-                
+                    ++totalPacketsSent;
+                }
+
             }
 
             //if ds.receive(ack)
             //need code for: if ACK is received within a specific timeframe, it is successful
-            
             //else if it takes too long/ACK never comes through,
             //resend from the packet requiring ACK, up to the previous sequence number (nextSeqNum-1)
             for (int i = (nextSeqNum - 1) - windowSize; i < nextSeqNum - 1; ++i) { //i'm attempting to make i = packet trying to get ACK'ed
@@ -122,7 +120,8 @@ public class Sender {
                 pkt = new DatagramPacket(data, max, ip, 8888);
                 ds.send(pkt);
 
-                ++nextSeqNum;
+                ++currentSeqNum;
+                nextSeqNum = currentSeqNum + 1;
             }
         }
 
