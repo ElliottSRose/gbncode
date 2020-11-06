@@ -69,7 +69,7 @@ public class Sender {
 
         while (true) {
             start = System.nanoTime(); //start the timer
-            int randomNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
+            int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
 
             while (nextSeqNum < prevSeqNum + windowSize) {  //should not exceed window size
                 data = new byte[max];
@@ -87,7 +87,7 @@ public class Sender {
                 }
 
                 //if random number generated is less than user input, then simulate packet loss
-                if (randomNum < userNum) {
+                if (pseudoNum < userNum) {
                     ++packetLoss; //keep count of total packet losses
                 } else {
                     buf.rewind();
