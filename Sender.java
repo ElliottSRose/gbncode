@@ -93,8 +93,8 @@ public class Sender {
                     buf.rewind();
                     pkt = new DatagramPacket(data, max, ip, 8888);
                     ds.send(pkt);
-                    ++prevSeqNum;
-                    nextSeqNum = prevSeqNum + 1;
+                    //++prevSeqNum;
+                    ++nextSeqNum;
                   }
                 
             }
@@ -104,7 +104,7 @@ public class Sender {
             
             //else if it takes too long/ACK never comes through,
             //resend from the packet requiring ACK, up to the previous sequence number
-            for (int i = prevSeqNum - windowSize; i < prevSeqNum; ++i) { //i'm attempting to make i = packet trying to get ACK'ed
+            for (int i = nextSeqNum - windowSize; i < prevSeqNum; ++i) { //i'm attempting to make i = packet trying to get ACK'ed
                 startIndex = max * i;
                 endIndex = max * i + max;
                 data = Arrays.copyOfRange(totalBytes, startIndex, endIndex);
@@ -117,8 +117,7 @@ public class Sender {
                 pkt = new DatagramPacket(data, max, ip, 8888);
                 ds.send(pkt);
 
-                ++prevSeqNum;
-                nextSeqNum = prevSeqNum + 1;
+                ++nextSeqNum;
             }
         }
 
