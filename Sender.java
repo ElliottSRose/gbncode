@@ -106,8 +106,7 @@ public class Sender {
 
                 }
 
-                //if ds.receive(ack)
-                //need code for: if ACK is received within a specific timeframe, it is successful
+                //if ACK is received within a specific timeframe, it is successful
                 //else if it takes too long/ACK never comes through,
                 //resend from the packet requiring ACK, up to the previous sequence number (nextSeqNum-1)
                 ds.setSoTimeout(20000); //arbitrary milliseconds
