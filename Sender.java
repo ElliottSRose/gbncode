@@ -76,7 +76,7 @@ public class Sender {
                 currentSeqNum = 0;
                 nextSeqNum = 0;
                 
-                while (currentSeqNum < windowSize - 1) {  //should not exceed window size
+                while (currentSeqNum < windowSize) {  //should not exceed window size
                     data = new byte[max];
                     startIndex = max * currentSeqNum;
                     endIndex = startIndex + max;
