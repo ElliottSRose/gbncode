@@ -69,12 +69,12 @@ public class Sender {
             int bytesRead = 0;
 
             while (true) {
-                start = System.nanoTime(); //start the timer
                 int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
 
                 currentSeqNum = 0;
                 nextSeqNum = 0;
-
+                
+                start = System.nanoTime(); //start the timer
                 while (currentSeqNum < windowSize - 1) {  //should not exceed window size
                     data = new byte[max];
                     startIndex = max * currentSeqNum;
@@ -133,14 +133,14 @@ public class Sender {
                 }
             }
             end = System.nanoTime(); //end the timer -- unreachable statement error
+            System.out.println("Elapsed time: " + (end - start));
             bis.close();
             fis.close();
             ds.close();
         } catch (SocketException e) {
-            System.out.println("Socket is now closed.");
+            System.out.println("Socket is closed.");
         }
-
-        System.out.println("Elapsed time: " + (end - start));
+        
         System.out.println("Packets sent: " + currentSeqNum);
         System.out.println("Lost packets: " + packetLoss);
     }
