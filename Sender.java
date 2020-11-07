@@ -141,7 +141,7 @@ public class Sender {
             System.out.println("Socket is closed.");
         }
         
-        System.out.println("Packets sent: " + currentSeqNum);
+        System.out.println("Packets sent: " + totalPacketsSent);
         System.out.println("Lost packets: " + packetLoss);
     }
 
