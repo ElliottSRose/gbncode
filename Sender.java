@@ -115,7 +115,7 @@ public class Sender {
                 try {
                     ds.receive(ack);
                 } catch (SocketTimeoutException e) {
-                    for (int i = currentSeqNum; i <= currentSeqNum; ++i) { //incorrect. i'm attempting to make i = packet trying to get ACK'ed -- need help
+                    for (int i = currentSeqNum; i < currentSeqNum; ++i) { //incorrect. i'm attempting to make i = packet trying to get ACK'ed -- need help
                         startIndex = max * i;
                         endIndex = startIndex + max;
                         data = Arrays.copyOfRange(totalBytes, startIndex, endIndex);
