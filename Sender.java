@@ -19,8 +19,8 @@ import java.util.Scanner;
 public class Sender {
 
     private static int windowSize = 4;
-    private static int currentSeqNum;
-    private static int nextSeqNum;
+    private static int currentSeqNum = 0;
+    private static int nextSeqNum = 0;
     //private static int totalPackets = 0;
     private static int totalPacketsSent = 0;
     private static long start = 0;
@@ -72,9 +72,6 @@ public class Sender {
             
             while (true) {
                 int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-
-                currentSeqNum = 0;
-                nextSeqNum = 0;
                 
                 while (currentSeqNum < windowSize) {  //should not exceed window size
                     data = new byte[max];
