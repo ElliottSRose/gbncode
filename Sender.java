@@ -68,13 +68,14 @@ public class Sender {
             BufferedInputStream bis = new BufferedInputStream(fis);
             int bytesRead = 0;
 
+            start = System.nanoTime(); //start the timer
+            
             while (true) {
                 int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
 
                 currentSeqNum = 0;
                 nextSeqNum = 0;
                 
-                start = System.nanoTime(); //start the timer
                 while (currentSeqNum < windowSize - 1) {  //should not exceed window size
                     data = new byte[max];
                     startIndex = max * currentSeqNum;
