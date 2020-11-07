@@ -73,8 +73,10 @@ public class Sender {
 
             while (true) {
                 int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-
-                while (currentSeqNum < windowSize) {  //should not exceed window size
+                
+                int eachRoundCompare = currentSeqNum + windowSize;
+                
+                while (currentSeqNum < eachRoundCompare) {  //should not exceed window size
                     data = new byte[max];
                     startIndex = max * currentSeqNum;
                     endIndex = startIndex + max;
