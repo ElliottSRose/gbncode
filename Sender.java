@@ -33,6 +33,7 @@ public class Sender {
     private static int endIndex;
     private static byte[] data;
     private static ByteBuffer buf;
+    private static int lostSeqNum;
 
     public static void main(String args[]) throws IOException {
 
@@ -69,10 +70,10 @@ public class Sender {
             int bytesRead = 0;
 
             start = System.nanoTime(); //start the timer
-            
+
             while (true) {
                 int pseudoNum = new Random(System.currentTimeMillis()).nextInt(); //pseudonumber generated using random seed set to current system time
-                
+
                 while (currentSeqNum < windowSize) {  //should not exceed window size
                     data = new byte[max];
                     startIndex = max * currentSeqNum;
@@ -91,17 +92,17 @@ public class Sender {
                     //if random number generated is less than user input, then simulate packet loss
                     if (pseudoNum < userNum) {
                         ++packetLoss; //keep count of total packet losses
+                        lostSeqNum = currentSeqNum;
 
                     } else {
                         buf.rewind();
                         pkt = new DatagramPacket(data, max, ip, 8888);
                         ds.send(pkt);
-
-                        ++currentSeqNum;
-                        nextSeqNum = currentSeqNum + 1;
-                        ++totalPacketsSent;
                     }
-
+                    ++currentSeqNum;
+                    nextSeqNum = currentSeqNum + 1;
+                    ++totalPacketsSent; 
+                    //maybe create a list of all the packets sent
                 }
 
                 //if ACK is received within a specific timeframe, it is successful
@@ -138,7 +139,7 @@ public class Sender {
         } catch (SocketException e) {
             System.out.println("Socket is closed.");
         }
-        
+
         System.out.println("Packets sent: " + totalPacketsSent);
         System.out.println("Lost packets: " + packetLoss);
     }
