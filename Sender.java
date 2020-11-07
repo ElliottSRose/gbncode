@@ -132,7 +132,7 @@ public class Sender {
                     }
                 }
             }
-            end = System.nanoTime(); //end the timer
+            end = System.nanoTime(); //end the timer -- unreachable statement error
             bis.close();
             fis.close();
             ds.close();
